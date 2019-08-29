@@ -3,16 +3,20 @@ import asyncio
 import aiomysql
 
 from routes import setup_routes
-from db_logic import establish_connection
+from db_logic import establish_connection, get_all_users
+from search_logic import NeighborIndex
 
 
 async def init_app():
     app = web.Application()
     conn = await establish_connection()
     app['conn'] = conn
+    users = await get_all_users(conn)
+    app['index'] = NeighborIndex(users)
     setup_routes(app)
     return app
 
 
-app = init_app()
-web.run_app(app)
+if __name__ == '__main__':
+    app = init_app()
+    web.run_app(app)

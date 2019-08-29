@@ -1,6 +1,6 @@
 from aiohttp import web
 
-from db_logic import add_user_to_db, get_neighbors_from_db
+from db_logic import add_user_to_db
 
 
 async def show(request):
@@ -13,10 +13,15 @@ async def add_user(request):
                          json_data['name'],
                          json_data['lon'],
                          json_data['lat'])
+    user_ind = 6 # get user index
+    request.app['index'].add_items([json_data['lon'], json_data['lat']],
+                                   user_ind)
     return web.Response(text='Added')
 
 
 async def get_neighbors(request):
     params = request.rel_url.query
-    users_data = await get_neighbors_from_db(request.app['conn'])
-    return web.Response(text=str(users_data))
+    neighbors = request.app['index'].search_neighbors(
+        float(params['lon']), float(params['lat']),
+        int(params['radius']), int(params['limit']))
+    return web.Response(text=str(neighbors))

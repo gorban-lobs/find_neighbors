@@ -11,7 +11,7 @@ async def establish_connection():
     return connection
 
 
-async def get_neighbors_from_db(conn):
+async def get_all_users(conn):
     async with conn.cursor() as cur:
         await cur.execute("SELECT * from users;")
         users_data = await cur.fetchall()
