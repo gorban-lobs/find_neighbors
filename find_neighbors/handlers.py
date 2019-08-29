@@ -1,6 +1,6 @@
-import asyncio
-import aiomysql
 from aiohttp import web
+
+from db_logic import add_user_to_db, get_neighbors_from_db
 
 
 async def show(request):
@@ -9,21 +9,14 @@ async def show(request):
 
 async def add_user(request):
     json_data = await request.json()
-    new_id = len(request.app.users) + 1
-    request.app.users[str(new_id)] = {
-        'name': json_data['name']
-    }
+    await add_user_to_db(request.app['conn'],
+                         json_data['name'],
+                         json_data['lon'],
+                         json_data['lat'])
     return web.Response(text='Added')
 
 
 async def get_neighbors(request):
     params = request.rel_url.query
-    conn = await aiomysql.connect(unix_socket="/var/run/mysqld/mysqld.sock",
-                                      user='hukuta', password='',
-                                      db='find_neighbors')
-    cur = await conn.cursor()
-    await cur.execute("SELECT * from users;")
-    data = await cur.fetchall()
-    await cur.close()
-    conn.close()
-    return web.Response(text=str(data))
+    users_data = await get_neighbors_from_db(request.app['conn'])
+    return web.Response(text=str(users_data))
