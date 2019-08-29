@@ -1,3 +1,5 @@
+import asyncio
+import aiomysql
 from aiohttp import web
 
 
@@ -16,5 +18,12 @@ async def add_user(request):
 
 async def get_neighbors(request):
     params = request.rel_url.query
-    cur_user = request.app.users.get(params['id'], 'No such user')
-    return web.Response(text=str(cur_user))
+    conn = await aiomysql.connect(unix_socket="/var/run/mysqld/mysqld.sock",
+                                      user='hukuta', password='',
+                                      db='find_neighbors')
+    cur = await conn.cursor()
+    await cur.execute("SELECT * from users;")
+    data = await cur.fetchall()
+    await cur.close()
+    conn.close()
+    return web.Response(text=str(data))
