@@ -9,13 +9,13 @@ async def show(request):
 
 async def add_user(request):
     json_data = await request.json()
-    await add_user_to_db(request.app['conn'],
-                         json_data['name'],
-                         json_data['lon'],
-                         json_data['lat'])
-    user_ind = 6 # get user index
-    request.app['index'].add_items([json_data['lon'], json_data['lat']],
-                                   user_ind)
+    user_id = await add_user_to_db(request.app['conn'],
+                                   json_data['name'],
+                                   json_data['lon'],
+                                   json_data['lat'])
+    request.app['index'].add_items([json_data['lon'],
+                                    json_data['lat']],
+                                    user_id)
     return web.Response(text='Added')
 
 
