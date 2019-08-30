@@ -5,6 +5,7 @@ import numpy as np
 class NeighborIndex(hnswlib.Index):
     def __init__(self, users, dim=2,
                  num_elems=10000000, ef=200, M=16, space='l2'):
+        self.num_elems = num_elems
         data = []
         data_labels = []
         for u in users:
@@ -23,7 +24,7 @@ class NeighborIndex(hnswlib.Index):
         super().add_items(np_data, np_labels)
 
     def search_neighbors(self, lon, lat, radius, limit):
-        super().set_ef(limit * 2)
+        super().set_ef(min(limit * 2, self.num_elems))
         labels, distance = super().knn_query(np.array([lon, lat]), k=limit)
         km_dist = np.sqrt(distance) * 111.11
         labels = labels[0][:len(km_dist[km_dist <= radius])]
