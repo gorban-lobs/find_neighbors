@@ -24,5 +24,7 @@ class NeighborIndex(hnswlib.Index):
 
     def search_neighbors(self, lon, lat, radius, limit):
         super().set_ef(limit * 2)
-        labels, _ = super().knn_query(np.array([lon, lat]), k=limit)
+        labels, distance = super().knn_query(np.array([lon, lat]), k=limit)
+        km_dist = np.sqrt(distance) * 111.11
+        labels = labels[0][:len(km_dist[km_dist <= radius])]
         return labels
