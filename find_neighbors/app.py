@@ -1,6 +1,5 @@
 import json
 import asyncio
-import aiomysql
 from aiohttp import web
 
 from routes import setup_routes
@@ -10,7 +9,7 @@ from search_logic import NeighborIndex
 
 async def init_app():
     app = web.Application()
-    
+
     settings = json.load(open('settings.json', 'r'))
     conn = await establish_connection(settings['db'])
     app['conn'] = conn
