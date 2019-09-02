@@ -4,11 +4,24 @@ import aiomysql
 
 async def establish_connection():
     connection = await aiomysql.connect(
-        unix_socket="/var/run/mysqld/mysqld.sock",
-        user='hukuta',
-        password='',
+        host='localhost',
+        port=3306,
+        user='user1',
+        password='pass1',
         db='find_neighbors')
     return connection
+
+
+async def create_table(conn):
+    async with conn.cursor() as cur:
+        sql_query = '''CREATE TABLE IF NOT EXISTS users (
+            id int(11) NOT NULL AUTO_INCREMENT,
+            name varchar(100) DEFAULT NULL,
+            lon float DEFAULT NULL,
+            lat float DEFAULT NULL,
+            PRIMARY KEY (id)
+            ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1'''
+        await cur.execute(sql_query)
 
 
 async def get_all_users(conn):
