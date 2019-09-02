@@ -2,13 +2,13 @@ import asyncio
 import aiomysql
 
 
-async def establish_connection():
+async def establish_connection(settings):
     connection = await aiomysql.connect(
-        host='localhost',
-        port=3306,
-        user='user1',
-        password='pass1',
-        db='find_neighbors')
+        host=settings['host'],
+        port=settings['port'],
+        user=settings['user'],
+        password=settings['password'],
+        db=settings['db'])
     return connection
 
 
