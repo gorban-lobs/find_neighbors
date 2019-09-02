@@ -70,3 +70,38 @@ def param_search_neighbors(request):
 def test_search_neighbors(setup_index_m, param_search_neighbors):
     params, res = param_search_neighbors
     assert setup_index_m.search_neighbors(*params).tolist() == res
+
+
+@pytest.fixture(
+    scope='function',
+    params=[
+        ((0, 0), (6371, 0, 0)),
+        ((90, 0), (0, 6371, 0)),
+        ((90, 90), (0, 0, 6371)),
+        ((-123, 90), (0, 0, 6371))])
+def param_circle_to_3d_coords(request):
+    return (np.array(request.param[0]), np.array(request.param[1]))
+
+
+def test_circle_to_3d_coords(setup_index_m, param_circle_to_3d_coords):
+    inp, res = param_circle_to_3d_coords
+    eps = 0.1
+    assert np.abs(sum(setup_index_m.circle_to_3d_coords(inp) - res)) < eps
+
+
+@pytest.fixture(
+    scope='function',
+    params=[
+        (7756.84, 8339.62),
+        (111.19, 111.19),
+        (9009.95, 10007.54),
+        (555.80, 555.97),
+        (8018.80, 8673.20)])
+def param_chord_to_circle_dist(request):
+    return request.param
+
+
+def test_chord_to_circle_dist(setup_index_m, param_chord_to_circle_dist):
+    inp, res = param_chord_to_circle_dist
+    eps = 0.1
+    assert np.abs(setup_index_m.chord_to_circle_dist(inp) - res) < eps
