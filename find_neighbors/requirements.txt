@@ -1,0 +1,6 @@
+aiohttp
+pybind11
+hnswlib
+aiomysql
+pytest
+pytest-aiohttp
