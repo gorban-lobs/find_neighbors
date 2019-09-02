@@ -45,6 +45,7 @@ async def add_user_to_db(conn, name, lon, lat):
 async def get_neighbors_by_ids(conn, ids):
     async with conn.cursor() as cur:
         fmt_str = ','.join(['%s'] * len(ids))
-        await cur.execute(f'SELECT name FROM users WHERE id IN ({fmt_str})', ids)
+        await cur.execute(f'SELECT id, name FROM users WHERE id IN ({fmt_str})',
+                          ids)
         users = await cur.fetchall()
     return users
