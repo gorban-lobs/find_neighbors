@@ -7,15 +7,16 @@ class NeighborIndex(hnswlib.Index):
                  num_elems=10000000, ef=200, M=16, space='l2'):
         self.EARTH_RAD = 6371
         self.num_elems = num_elems
-        data = []
-        data_labels = []
-        for u in users:
-            data_labels.append(u[0])
-            data.append([u[2], u[3]])
         super().__init__(space=space, dim=dim)
         super().init_index(max_elements=num_elems,
                            ef_construction=ef, M=M)
-        self.add_items(data, data_labels)
+        if users:
+            data = []
+            data_labels = []
+            for u in users:
+                data_labels.append(u[0])
+                data.append([u[2], u[3]])
+            self.add_items(data, data_labels)
 
     def add_items(self, coords, ind):
         np_labels = np.array(ind)
