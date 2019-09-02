@@ -2,10 +2,10 @@ import json
 import asyncio
 from aiohttp import web
 
-from find_neighbors.routes import setup_routes
-from find_neighbors.db_logic import establish_connection
-from find_neighbors.db_logic import get_all_users, create_table
-from find_neighbors.search_logic import NeighborIndex
+from routes import setup_routes
+from db_logic import establish_connection
+from db_logic import get_all_users, create_table
+from search_logic import NeighborIndex
 
 
 async def init_app():

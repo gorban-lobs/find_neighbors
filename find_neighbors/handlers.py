@@ -1,7 +1,7 @@
 import json
 from aiohttp import web
 
-from find_neighbors.db_logic import add_user_to_db, get_neighbors_by_ids
+from db_logic import add_user_to_db, get_neighbors_by_ids
 
 
 async def add_user(request):

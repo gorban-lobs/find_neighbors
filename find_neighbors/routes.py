@@ -1,4 +1,4 @@
-from from find_neighbors.handlers import get_neighbors, add_user
+from handlers import get_neighbors, add_user
 
 
 def setup_routes(app):
