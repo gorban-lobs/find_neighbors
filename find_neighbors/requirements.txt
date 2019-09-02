@@ -1,0 +1,4 @@
+aiohttp
+pybind11
+hnswlib
+aiomysql
